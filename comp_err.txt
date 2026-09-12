@@ -1,0 +1,80 @@
+En el fichero incluido desde backend/src/users_service.c:11:
+backend/src/session_manager.h:20:13: aviso: ‘trim_string’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+   20 | static void trim_string(char *str);
+      |             ^~~~~~~~~~~
+backend/src/users_service.c: En la función ‘users_service_register’:
+backend/src/users_service.c:174:64: aviso: la salida de la directiva ‘%s’ podría truncarse al escribir hasta 255 bytes en una región de tamaño 207 [-Wformat-truncation=]
+  174 |              "SELECT COUNT(*) FROM cc_usuarios WHERE nombre = '%s' and email = '%s'", decoded_nombre, decoded_email);
+      |                                                                ^~                     ~~~~~~~~~~~~~~
+backend/src/users_service.c:173:5: nota: ‘snprintf’ manda entre 66 y 576 bytes a un destino de tamaño 256
+  173 |     snprintf(query_check, sizeof(query_check),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  174 |              "SELECT COUNT(*) FROM cc_usuarios WHERE nombre = '%s' and email = '%s'", decoded_nombre, decoded_email);
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+backend/src/users_service.c:191:14: aviso: la salida de la directiva ‘%s’ podría truncarse escribiendo hasta 255 bytes en una región de un tamaño entre 187 y 442 [-Wformat-truncation=]
+  191 |              "INSERT INTO cc_usuarios (nombre, email, password, rol_id) "
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  192 |              "VALUES ('%s','%s','%s', %d)",
+  193 |              decoded_nombre, decoded_email, hash, atoi(rol));
+      |                              ~~~~~~~~~~~~~
+backend/src/users_service.c:192:29: nota: la cadena de formato se definió aquí
+  192 |              "VALUES ('%s','%s','%s', %d)",
+      |                             ^~
+backend/src/users_service.c:190:5: nota: ‘snprintf’ manda entre 79 y 639 bytes a un destino de tamaño 512
+  190 |     snprintf(query, sizeof(query),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  191 |              "INSERT INTO cc_usuarios (nombre, email, password, rol_id) "
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  192 |              "VALUES ('%s','%s','%s', %d)",
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  193 |              decoded_nombre, decoded_email, hash, atoi(rol));
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+backend/src/users_service.c: En la función ‘users_service_password’:
+backend/src/users_service.c:230:63: aviso: la salida de la directiva ‘%s’ podría truncarse al escribir hasta 255 bytes en una región de tamaño 208 [-Wformat-truncation=]
+  230 |              "SELECT COUNT(*) FROM cc_usuarios WHERE email = '%s'", decoded_email);
+      |                                                               ^~    ~~~~~~~~~~~~~
+backend/src/users_service.c:229:5: nota: ‘snprintf’ manda entre 50 y 305 bytes a un destino de tamaño 256
+  229 |     snprintf(query_check, sizeof(query_check),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  230 |              "SELECT COUNT(*) FROM cc_usuarios WHERE email = '%s'", decoded_email);
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+En el nivel principal:
+backend/src/users_service.c:440:14: aviso: se define ‘json_escape’ pero no se usa [-Wunused-function]
+  440 | static char *json_escape(const char *src) {
+      |              ^~~~~~~~~~~
+backend/src/users_service.c:425:13: aviso: se define ‘append_str’ pero no se usa [-Wunused-function]
+  425 | static void append_str(char **dest, size_t *size, const char *src) {
+      |             ^~~~~~~~~~
+En el fichero incluido desde backend/src/routes.c:8:
+backend/src/auth.h:5:13: aviso: ‘route_home’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+    5 | static void route_home(int client, const char *body);
+      |             ^~~~~~~~~~
+backend/src/auth.h:6:13: aviso: ‘route_password’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+    6 | static void route_password(int client, const char *body);
+      |             ^~~~~~~~~~~~~~
+backend/src/auth.h:7:13: aviso: ‘route_change_password’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+    7 | static void route_change_password(int client, const char *body);
+      |             ^~~~~~~~~~~~~~~~~~~~~
+En el fichero incluido desde backend/src/routes.c:9:
+backend/src/users.h:8:13: aviso: ‘route_get_users’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+    8 | static void route_get_users(int client, const char *body);
+      |             ^~~~~~~~~~~~~~~
+backend/src/users.h:9:13: aviso: ‘route_get_register’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+    9 | static void route_get_register(int client, const char *body);
+      |             ^~~~~~~~~~~~~~~~~~
+backend/src/users.h:10:13: aviso: ‘route_post_register’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+   10 | static void route_post_register(int client, const char *body);
+      |             ^~~~~~~~~~~~~~~~~~~
+En el fichero incluido desde backend/src/routes.c:12:
+backend/src/session_manager.h:20:13: aviso: ‘trim_string’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+   20 | static void trim_string(char *str);
+      |             ^~~~~~~~~~~
+backend/src/roles_service.c: En la función ‘roles_service_register’:
+backend/src/roles_service.c:173:17: aviso: declaración implícita de la función ‘strcasecmp’; ¿quiso decir ‘strncmp’? [-Wimplicit-function-declaration]
+  173 |             if (strcasecmp(r->descripcion, d_descripcion) == 0) {
+      |                 ^~~~~~~~~~
+      |                 strncmp
+En el fichero incluido desde backend/src/main.c:11:
+backend/src/session_manager.h:20:13: aviso: ‘trim_string’ se declaró ‘static’ pero nunca se define [-Wunused-function]
+   20 | static void trim_string(char *str);
+      |             ^~~~~~~~~~~

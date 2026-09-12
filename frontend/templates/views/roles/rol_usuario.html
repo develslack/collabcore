@@ -1,0 +1,26 @@
+<div class="container">
+ <div class="jumbotron">
+ <div class="alert alert-info">
+  <h2><span class="glyphicon glyphicon-random" aria-hidden="true"></span> Cambiar Rol de Usuario</h2>
+ </div><hr>
+ <div class="alert alert-warning">
+  <p><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Seleccione el nuevo rol que tendrá el usuario</p>
+ </div><hr>
+
+  <form id="form-user-rol">
+    <input type="hidden" id="id_usuario" name="id">
+    <div class="form-group">
+      <label for="rol"><span class="label label-default"> Rol </span></label>
+      <select class="form-control" id="rol" name="rol">
+        <option value="" selected disabled>Seleccionar</option>
+
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Actualizar</button>
+  </form><hr>
+
+    <div id="msg-update-rol"></div>
+
+</div>
+</div>

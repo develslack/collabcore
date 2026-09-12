@@ -1,0 +1,31 @@
+
+<div class="container-fluid">
+    <div class="jumbotron">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <strong>Usuarios</strong>
+            </div>
+        </div><hr>
+            <button type="button" class="btn btn-success btn-sm" id="add-user-form">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Añadir Usuario</button><hr>
+
+
+                <table class='display compact' style='width:100%' id='usuariosTable'>
+                    <thead>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Nombre y Apellido</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Email</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Rol</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-warning'>Acciones</span></th>
+                    </thead>
+
+                        <tbody id="usersTableBody"></tbody>
+
+
+                    </table>
+                    <hr>
+
+                    <div id="alert-info"></div>
+
+    </div>
+</div>
