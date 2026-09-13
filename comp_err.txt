@@ -65,7 +65,7 @@ backend/src/users.h:9:13: aviso: ‘route_get_register’ se declaró ‘static�
 backend/src/users.h:10:13: aviso: ‘route_post_register’ se declaró ‘static’ pero nunca se define [-Wunused-function]
    10 | static void route_post_register(int client, const char *body);
       |             ^~~~~~~~~~~~~~~~~~~
-En el fichero incluido desde backend/src/routes.c:12:
+En el fichero incluido desde backend/src/routes.c:13:
 backend/src/session_manager.h:20:13: aviso: ‘trim_string’ se declaró ‘static’ pero nunca se define [-Wunused-function]
    20 | static void trim_string(char *str);
       |             ^~~~~~~~~~~
@@ -74,6 +74,11 @@ backend/src/roles_service.c:173:17: aviso: declaración implícita de la funció
   173 |             if (strcasecmp(r->descripcion, d_descripcion) == 0) {
       |                 ^~~~~~~~~~
       |                 strncmp
+backend/src/grupos_service.c: En la función ‘grupos_service_register’:
+backend/src/grupos_service.c:203:48: aviso: declaración implícita de la función ‘strcasecmp’; ¿quiso decir ‘strncmp’? [-Wimplicit-function-declaration]
+  203 |             if (g->id_creador == id_creador && strcasecmp(g->nombre, d_nombre) == 0) {
+      |                                                ^~~~~~~~~~
+      |                                                strncmp
 En el fichero incluido desde backend/src/main.c:11:
 backend/src/session_manager.h:20:13: aviso: ‘trim_string’ se declaró ‘static’ pero nunca se define [-Wunused-function]
    20 | static void trim_string(char *str);

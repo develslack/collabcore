@@ -28,3 +28,68 @@ select * from cc_roles;
 insert into cc_roles(descripcion) VALUES("Usuario");
 
 
+# ======================================================== #
+# table cc_grupos (El Contenedor Organizativo)
+# ======================================================== #
+CREATE TABLE IF NOT EXISTS cc_grupos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    id_creador INT NOT NULL, -- El "Jefe" o dueño original del grupo
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_creador) REFERENCES cc_usuarios(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+show columns from cc_grupos;
+
+# ======================================================== #
+# table cc_miembros_grupo (Con Historial / Soft Delete)
+# ======================================================== #
+CREATE TABLE IF NOT EXISTS cc_miembros_grupo (
+    id_grupo INT NOT NULL,
+    id_usuario INT NOT NULL,
+    es_coordinador TINYINT(1) DEFAULT 0, -- 1 si actúa como "sudo" dentro del grupo
+    fecha_ingreso DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_baja DATETIME NULL, -- NULL significa que el usuario está activo. Si tiene fecha, es un Soft Delete.
+    PRIMARY KEY (id_grupo, id_usuario, fecha_ingreso), -- Permite que un usuario se vaya y vuelva a entrar generando un nuevo registro histórico
+    FOREIGN KEY (id_grupo) REFERENCES cc_grupos(id),
+    FOREIGN KEY (id_usuario) REFERENCES cc_usuarios(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+show columns from cc_miembros_grupo;
+
+
+# ======================================================== #
+# table cc_documentos (Cabecera)
+# ======================================================== #
+CREATE TABLE IF NOT EXISTS cc_documentos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_propietario INT NOT NULL, -- Dueño absoluto
+    id_grupo_padre INT NULL, -- A qué contenedor organizativo pertenece visualmente
+    titulo VARCHAR(255) NOT NULL,
+    tipo ENUM('texto', 'planilla') NOT NULL,
+    estado_ciclo VARCHAR(50) DEFAULT 'abierto',
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_propietario) REFERENCES cc_usuarios(id),
+    FOREIGN KEY (id_grupo_padre) REFERENCES cc_grupos(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+show columns from cc_documentos;
+
+# ======================================================== #
+# table cc_acl_documentos (ACL - La barrera de seguridad real)
+# ======================================================== #
+CREATE TABLE IF NOT EXISTS cc_acl_documentos (
+    id_documento INT NOT NULL,
+    id_usuario INT NOT NULL,
+    permiso_octal TINYINT UNSIGNED NOT NULL, -- 4 (Lectura), 6 (Escritura), 7 (Ejecución/Admin)
+    otorgado_por INT NOT NULL, -- Auditoría: ¿Quién le dio este acceso específico?
+    fecha_asignacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_documento, id_usuario),
+    FOREIGN KEY (id_documento) REFERENCES cc_documentos(id),
+    FOREIGN KEY (id_usuario) REFERENCES cc_usuarios(id),
+    FOREIGN KEY (otorgado_por) REFERENCES cc_usuarios(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+show columns from cc_acl_documentos;
+
+

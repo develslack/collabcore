@@ -55,107 +55,39 @@ document.addEventListener("DOMContentLoaded", () => {
     let navBar = `<nav class="navbar navbar-inverse">
                         <div class="container-fluid">
                             <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="#">
-                                    <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-dashboard"></span> Dashboard </button></a>
+                            <a class="navbar-brand" href="#">CollabCore</a>
                             </div>
-                            <div class="collapse navbar-collapse" id="myNavbar">
-                                <ul class="nav navbar-nav">
-                                    <li id="link-home"><a href="#" data-toggle="tooltip" title="Limpar pantalla">
-                                        <button type="button" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-home"></span> Home </button></a></li>
+                            <ul class="nav navbar-nav">
+                            <li class="active"><a href="#" id="link-home"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span> Sistema <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                <li><a href="#" id="link-usuarios"><span class="glyphicon glyphicon-user"></span> Usuarios</a></li>
+                                <li><a href="#" id="link-roles"><span class="glyphicon glyphicon-option-vertical"></span> Roles</a></li>
+                                <li><a href="#"><span class="glyphicon glyphicon-th-large"></span> Grupos</a></li>
                                 </ul>
-                                <ul class="nav navbar-nav navbar-right">
-                                    <li><a href="#" id="dashboard-logout" data-toggle="tooltip" title="Salir de la aplicación">
-                                        <button type="button" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-log-out"></span> Salir </button></a></li>
-                                    <li><a href="#" id="user-my-data" data-toggle="tooltip" title="Datos personales" data-id="${user.nombre}">
-                                        <button type="button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-user"></span> ${user.nombre} </button></a></li>
+                            </li>
+                            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-folder-open"></span> Documentos <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                <li><a href="#"><span class="glyphicon glyphicon-file"></span> Collab Write</a></li>
+                                <li><a href="#"><span class="glyphicon glyphicon-file"></span> Collab Calc</a></li>
+                                <li><a href="#"><span class="glyphicon glyphicon-menu-hamburger"></span> Histórico</a></li>
                                 </ul>
-                            </div>
+                            </li>
+                            <li><a href="#">Page 3</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#" id="user-my-data" data-toggle="tooltip" title="Datos personales" data-id="${user.nombre}"><span class="glyphicon glyphicon-user"></span> ${user.nombre}</a></li>
+                            <li class="active"><a href="#" id="dashboard-logout" data-toggle="tooltip" title="Salir de la aplicación"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+                            </ul>
                         </div>
-                    </nav><br>
+                </nav><br>
 
                     <div class="container-fluid">
                         <div id="dashboard_messages"></div>
-                        <div class="row content">
-                            <div class="col-sm-2 sidenav">
-                               <div class="panel panel-primary">
-                                        <div class="panel-heading"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Menú</div>
-                                            <div class="panel-body">
-                                                <div class="panel-group" id="accordion">
-                                                    <!-- Menú 1: Sistema (Solo Admin) -->
-                                                    <div class="panel panel-default" id="menu-sistema-container">
-                                                        <div class="panel-heading">
-                                                            <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Sistema</a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapse1" class="panel-collapse collapse">
-                                                            <div class="panel-body">
-                                                                <div class="list-group">
-                                                                <a href="#" class="list-group-item" id="link-usuarios" data-toggle="tooltip" title="Usuarios"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Usuarios</a>
-                                                                <a href="#" class="list-group-item" id="link-roles" data-toggle="tooltip" title="Listar Roles"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Roles</a>
-                                                                <a href="#" class="list-group-item" id="link-modulos" data-toggle="tooltip" title="Listar Módulos"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Módulos</a>
-                                                                <a href="#" class="list-group-item" id="link-documentacion_tecnica" data-toggle="tooltip" title="Listar Documentación Técnica"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Documentación Técnica</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
 
-                                                    <!-- Menú 2: Carga de Lotes (Público) -->
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
-                                                            <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                                                                <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span> Carga de Lotes</a></h4>
-                                                        </div>
-                                                        <div id="collapse2" class="panel-collapse collapse">
-                                                            <div class="panel-body">
-                                                                <div class="list-group">
-                                                                <a href="#" class="list-group-item" id="link-parametros_basicos" data-toggle="tooltip" title="Cargar Parámetros Básicos">
-                                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Parámetros Básicos</a>
-                                                                <a href="#" class="list-group-item" id="link-ch" data-toggle="tooltip" title="Listar CH">
-                                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> CH (Cabezal de Haberes)</a>
-                                                                <a href="#" class="list-group-item" id="link-dp" data-toggle="tooltip" title="Listar DP">
-                                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> DP (Datos de Personal)</a>
-                                                                <a href="#" class="list-group-item" id="link-lh1" data-toggle="tooltip" title="Listar LH1">
-                                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> LH1 (Liquidación de Haberes 1)</a>
-                                                                <a href="#" class="list-group-item" id="link-lh2" data-toggle="tooltip" title="Listar LH2">
-                                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> LH2 (Liquidación de Haberes 2)</a>
-                                                                <a href="#" class="list-group-item" id="link-administracion_lotes" data-toggle="tooltip" title="Administración de Lotes">
-                                                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Administración de Lotes</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Menú 3: Tablas Maestro (Solo Admin) -->
-                                                    <div class="panel panel-default" id="menu-maestros-container">
-                                                        <div class="panel-heading">
-                                                            <h4 class="panel-title">
-                                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3"><span class="glyphicon glyphicon-tree-conifer" aria-hidden="true"></span> Tablas Maestro</a></h4>
-                                                        </div>
-                                                        <div id="collapse3" class="panel-collapse collapse">
-                                                            <div class="panel-body">
-                                                                <div class="list-group">
-                                                                <a href="#" class="list-group-item" id="link-tablas_maestro" data-toggle="tooltip" title="Listar Tablas Maestro">
-                                                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Tablas Maestro</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            <div class="col-sm-10 text-left"><br>
+                            <div class="container-fluid"><br>
                                 <div id="dashboard_views"></div>
                             </div>
-                        </div>
                     </div>`;
 
     // Inyectar contenido en el contenedor
@@ -187,8 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+
   console.log("👤 Usuario autenticado: ", user.nombre);
-  console.log("👤 Usuario token: ", user.token);
+  console.log("👤 Usuario Rol ID: ", user.rol_id);
 
   // Acción de logout
   const logoutBtn = document.getElementById("dashboard-logout");
@@ -345,15 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. DEFINIR PALABRAS CLAVE ASOCIADAS A MÓDULOS DE ADMINISTRACIÓN (SISTEMA Y TABLAS MAESTRO)
     const modulosAdministrativos = [
-      "usuarios", "roles", "modulos", "register", "rol_usuario", "nuevo_rol", "nuevo_modulo",
-      "tablas_maestro", "instituciones", "actividades", "agrupamientos", "cargos_directivos",
-      "discapacidades", "disciplinas", "escalafones", "estado_civil", "fuente_financiamiento",
-      "identidad_genero", "jurisdicciones", "marca_estado", "nacionalidades", "nivel_educativo",
-      "niveles", "programas", "proyectos", "remunerativo_bonificable", "sanciones_disciplinarias",
-      "sexos", "subjurisdicciones", "nueva_subjurisdiccion", "tipo_accesos", "tipo_conceptos",
-      "tipo_documentos", "tipo_horarios", "tipo_licencias", "tipo_plantas", "tipo_unidades_fisicas",
-      "ubicaciones_geograficas", "unidades_organizativas", "subprogramas", "entidades"
-    ];
+      "usuarios", "roles", "modulos", "register", "rol_usuario", "nuevo_rol", "nuevo_modulo"];
 
     // Comprobar si el viewPath actual tiene alguna de las palabras restringidas
     const esRutaRestringida = modulosAdministrativos.some(keyword => viewPath.includes(keyword));

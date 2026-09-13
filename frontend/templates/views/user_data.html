@@ -1,0 +1,43 @@
+<div class="container">
+<div class="jumbotron">
+  <div class="alert alert-success">
+  	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <strong>Información!</strong> Datos personales de Usuario.
+  </div><hr>
+
+  <form id="user_data_form" method="POST">
+
+  <input type="hidden" id="id" name="id">
+
+    <div class="form-group">
+      <label for="name">Nombre y Apellido:</label>
+      <input type="text" class="form-control" id="nombre" placeholder="Ingrese su Nombre y Apellido" name="nombre" disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Ingrese su email" name="email" disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="rol">Tipo de Rol:</label>
+      <input type="text" class="form-control" id="rol" name="rol" disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="password_1">Password:</label>
+      <input type="password" class="form-control" id="password_1" placeholder="Ingrese password" name="password_1">
+    </div>
+
+    <div class="form-group">
+      <label for="password_2">Repita Password:</label>
+      <input type="password" class="form-control" id="password_2" placeholder="Repetir password" name="password_2">
+    </div>
+
+    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Actualizar</button>
+
+  </form><hr>
+
+  <div id="msg-update-data-user"></div>
+
+</div>
+</div>
