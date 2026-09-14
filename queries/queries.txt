@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS cc_grupos (
 
 show columns from cc_grupos;
 
+SELECT g.id, g.nombre, g.id_creador, g.fecha_creacion, u.nombre AS nombre_usuario
+FROM cc_grupos g
+JOIN cc_usuarios u ON g.id_creador = u.id;
+
 # ======================================================== #
 # table cc_miembros_grupo (Con Historial / Soft Delete)
 # ======================================================== #

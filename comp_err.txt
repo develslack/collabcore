@@ -75,10 +75,21 @@ backend/src/roles_service.c:173:17: aviso: declaración implícita de la funció
       |                 ^~~~~~~~~~
       |                 strncmp
 backend/src/grupos_service.c: En la función ‘grupos_service_register’:
-backend/src/grupos_service.c:203:48: aviso: declaración implícita de la función ‘strcasecmp’; ¿quiso decir ‘strncmp’? [-Wimplicit-function-declaration]
-  203 |             if (g->id_creador == id_creador && strcasecmp(g->nombre, d_nombre) == 0) {
+backend/src/grupos_service.c:204:48: aviso: declaración implícita de la función ‘strcasecmp’; ¿quiso decir ‘strncmp’? [-Wimplicit-function-declaration]
+  204 |             if (g->id_creador == id_creador && strcasecmp(g->nombre, d_nombre) == 0) {
       |                                                ^~~~~~~~~~
       |                                                strncmp
+backend/src/grupos_service.c: En la función ‘route_get_grupos_list’:
+backend/src/grupos_service.c:370:119: aviso: la salida de la directiva ‘%s’ podría truncarse escribiendo hasta 99 bytes en una región de un tamaño entre 28 y 166 [-Wformat-truncation=]
+  370 |             "{\"id\": %d, \"nombre\": \"%s\" , \"id_creador\": %d , \"fecha_creacion\": \"%s\", \"nombre_creador\": \"%s\"}%s",
+      |                                                                                                                       ^~
+backend/src/grupos_service.c:369:9: nota: ‘snprintf’ manda 87 o más bytes (se asume 304) a un destino de tamaño 250
+  369 |         snprintf(item, sizeof(item),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  370 |             "{\"id\": %d, \"nombre\": \"%s\" , \"id_creador\": %d , \"fecha_creacion\": \"%s\", \"nombre_creador\": \"%s\"}%s",
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  371 |             oneGrupo->id, oneGrupo->nombre, oneGrupo->id_creador, oneGrupo->fecha_creacion, oneGrupo->nombre_creador, (i < total_grupos - 1) ? "," : "");
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 En el fichero incluido desde backend/src/main.c:11:
 backend/src/session_manager.h:20:13: aviso: ‘trim_string’ se declaró ‘static’ pero nunca se define [-Wunused-function]
    20 | static void trim_string(char *str);

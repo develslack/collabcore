@@ -138,7 +138,7 @@ void grupos_init_cache(ArrayList* alistGrupos) {
 void grupos_load_storage(ArrayList* alistGrupos) {
     if(alistGrupos == NULL) return;
 
-    DBResult *res = db_query("SELECT id, nombre, id_creador, fecha_creacion FROM cc_grupos");
+    DBResult *res = db_query("SELECT g.id, g.nombre, g.id_creador, g.fecha_creacion, u.nombre AS nombre_creador FROM cc_grupos g JOIN cc_usuarios u ON g.id_creador = u.id");
     if (!res) return;
 
     MYSQL_ROW row;
@@ -149,6 +149,7 @@ void grupos_load_storage(ArrayList* alistGrupos) {
             strncpy(nGrupo->nombre, row[1] ? row[1] : "", 99);
             nGrupo->id_creador = atoi(row[2]);
             strncpy(nGrupo->fecha_creacion, row[3] ? row[3] : "", 19);
+            strncpy(nGrupo->nombre_creador, row[4] ? row[4] : "", 100);
 
             alistGrupos->add(alistGrupos, nGrupo);
         }
@@ -366,8 +367,8 @@ static void route_get_grupos_list(int client, const char *body) {
         char item[250];
 
         snprintf(item, sizeof(item),
-            "{\"id\": %d, \"nombre\": \"%s\" , \"id_creador\": %d}%s",
-            oneGrupo->id, oneGrupo->nombre, oneGrupo->id_creador, (i < total_grupos - 1) ? "," : "");
+            "{\"id\": %d, \"nombre\": \"%s\" , \"id_creador\": %d , \"fecha_creacion\": \"%s\", \"nombre_creador\": \"%s\"}%s",
+            oneGrupo->id, oneGrupo->nombre, oneGrupo->id_creador, oneGrupo->fecha_creacion, oneGrupo->nombre_creador, (i < total_grupos - 1) ? "," : "");
 
         strcat(json, item);
     }

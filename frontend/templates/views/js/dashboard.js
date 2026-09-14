@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <ul class="dropdown-menu">
                                 <li><a href="#" id="link-usuarios"><span class="glyphicon glyphicon-user"></span> Usuarios</a></li>
                                 <li><a href="#" id="link-roles"><span class="glyphicon glyphicon-option-vertical"></span> Roles</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-th-large"></span> Grupos</a></li>
+                                <li><a href="#" id="link-grupos"><span class="glyphicon glyphicon-th-large"></span> Grupos</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-folder-open"></span> Documentos <span class="caret"></span></a>
@@ -163,12 +163,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ======================================================================================================================== //
-  // ESPACIO DE PARAMETROS BASICOS Y TABLAS DE ARCHIVOS DE LOTES//
+  // ESPACIO DE GRUPOS //
   // ======================================================================================================================== //
-  document.getElementById("link-parametros_basicos")?.addEventListener("click", (e) => {
+  document.getElementById("link-grupos")?.addEventListener("click", (e) => {
     e.preventDefault();
-    loadDashboardView(window.VIEWS_PATH + "/parametros_basicos/parametros_basicos.html");
+    loadDashboardView(window.VIEWS_PATH + "/grupos/grupos.html");
   });
+  // ======================================================================================================================== //
 
   document.getElementById("link-ch")?.addEventListener("click", (e) => {
     e.preventDefault();
@@ -326,116 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (viewPath.includes("modulos") || viewPath.includes("editar_modulo")) {
         loadDashboardScript("/js/modulos.js");
       }
-      else if (viewPath.includes("instituciones") || viewPath.includes("editar_institucion")) {
-        loadDashboardScript("/js/instituciones.js");
-      }
-      else if (viewPath.includes("actividades") || viewPath.includes("editar_actividad")) {
-        loadDashboardScript("/js/actividades.js");
-      }
-      else if (viewPath.includes("agrupamientos") || viewPath.includes("editar_agrupamiento")) {
-        loadDashboardScript("/js/agrupamientos.js");
-      }
-      else if (viewPath.includes("cargos_directivos") || viewPath.includes("editar_cargo_directivo")) {
-        loadDashboardScript("/js/cargos_directivos.js");
-      }
-      else if (viewPath.includes("discapacidades") || viewPath.includes("editar_discapacidad")) {
-        loadDashboardScript("/js/discapacidades.js");
-      }
-      else if (viewPath.includes("disciplinas") || viewPath.includes("editar_disciplina")) {
-        loadDashboardScript("/js/disciplinas.js");
-      }
-      else if (viewPath.includes("escalafones") || viewPath.includes("editar_escalafon")) {
-        loadDashboardScript("/js/escalafones.js");
-      }
-      else if (viewPath.includes("estado_civil") || viewPath.includes("editar_estado_civil")) {
-        loadDashboardScript("/js/estado_civil.js");
-      }
-      else if (viewPath.includes("fuente_financiamiento") || viewPath.includes("editar_fuente_financiamiento")) {
-        loadDashboardScript("/js/fuente_financiamiento.js");
-      }
-      else if (viewPath.includes("identidad_genero") || viewPath.includes("editar_identidad_genero")) {
-        loadDashboardScript("/js/identidad_genero.js");
-      }
-      else if (viewPath.includes("subjurisdicciones")) {
-        loadDashboardScript("/js/subjurisdicciones.js");
-      }
-      else if (viewPath.includes("jurisdicciones") || viewPath.includes("editar_jurisdicciones")) {
-        loadDashboardScript("/js/jurisdicciones.js");
-      }
-      else if (viewPath.includes("marca_estado") || viewPath.includes("editar_marca_estado")) {
-        loadDashboardScript("/js/marca_estado.js");
-      }
-      else if (viewPath.includes("nacionalidades") || viewPath.includes("editar_nacionalidad")) {
-        loadDashboardScript("/js/nacionalidades.js");
-      }
-      else if (viewPath.includes("nivel_educativo") || viewPath.includes("editar_nivel_educativo")) {
-        loadDashboardScript("/js/nivel_educativo.js");
-      }
-      else if (viewPath.includes("niveles") || viewPath.includes("editar_niveles")) {
-        loadDashboardScript("/js/niveles.js");
-      }
-      else if (viewPath.includes("subprogramas")) {
-        loadDashboardScript("/js/subprogramas.js");
-      }
-      else if (viewPath.includes("programas") || viewPath.includes("editar_programas")) {
-        loadDashboardScript("/js/programas.js");
-      }
-      else if (viewPath.includes("proyectos") || viewPath.includes("editar_proyectos")) {
-        loadDashboardScript("/js/proyectos.js");
-      }
-      else if (viewPath.includes("remunerativo_bonificable") || viewPath.includes("editar_remunerativos_bonificables")) {
-        loadDashboardScript("/js/remunerativo_bonificable.js");
-      }
-      else if (viewPath.includes("sanciones_disciplinarias") || viewPath.includes("editar_sanciones_disciplinarias")) {
-        loadDashboardScript("/js/sanciones_disciplinarias.js");
-      }
-      else if (viewPath.includes("tipo_accesos")) {
-        loadDashboardScript("/js/tipo_accesos.js");
-      }
-      else if (viewPath.includes("tipo_conceptos")) {
-        loadDashboardScript("/js/tipo_conceptos.js");
-      }
-      else if (viewPath.includes("tipo_documentos")) {
-        loadDashboardScript("/js/tipo_documentos.js");
-      }
-      else if (viewPath.includes("tipo_horarios")) {
-        loadDashboardScript("/js/tipo_horarios.js");
-      }
-      else if (viewPath.includes("tipo_licencias")) {
-        loadDashboardScript("/js/tipo_licencias.js");
-      }
-      else if (viewPath.includes("tipo_plantas")) {
-        loadDashboardScript("/js/tipo_plantas.js");
-      }
-      else if (viewPath.includes("tipo_unidades_fisicas")) {
-        loadDashboardScript("/js/tipo_unidades_fisicas.js");
-      }
-      else if (viewPath.includes("sexos") || viewPath.includes("editar_sexo")) {
-        loadDashboardScript("/js/sexos.js");
-      }
-      else if (viewPath.includes("ubicaciones_geograficas")) {
-        loadDashboardScript("/js/ubicaciones_geograficas.js");
-      }
-      else if (viewPath.includes("unidades_organizativas")) {
-        loadDashboardScript("/js/unidades_organizativas.js");
-      }
-      else if (viewPath.includes("entidades")) {
-        loadDashboardScript("/js/entidades.js");
-      }
-      else if (viewPath.includes("parametros_basicos")) {
-        loadDashboardScript("/js/parametros_basicos.js");
-      }
-      else if (viewPath.includes("ch")) {
-        loadDashboardScript("/js/ch.js");
-      }
-      else if (viewPath.includes("dp")) {
-        loadDashboardScript("/js/dp.js");
-      }
-      else if (viewPath.includes("lh1")) {
-        loadDashboardScript("/js/lh1.js");
-      }
-      else if (viewPath.includes("lh2")) {
-        loadDashboardScript("/js/lh2.js");
+      else if (viewPath.includes("grupos")) {
+        loadDashboardScript("/js/grupos.js");
       }
       else if (viewPath.includes("administracion_lotes")) {
 

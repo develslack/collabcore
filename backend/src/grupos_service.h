@@ -12,6 +12,7 @@ typedef struct {
     char nombre[100];
     int id_creador;
     char fecha_creacion[20]; // Formato YYYY-MM-DD HH:MM:SS
+    char nombre_creador[100];
 } Grupo;
 
 Grupo* newGrupo();
