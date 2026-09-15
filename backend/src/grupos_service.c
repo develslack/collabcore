@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <mysql/mysql.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
+#include <libgen.h> // Necesario para dirname()
+
 #include "hash.h"
 #include "routes.h"
 #include "db.h"
@@ -12,13 +18,42 @@
 static ArrayList* pListGruposLocal = NULL;
 
 // ===================================================================================================================================== //
+// 📁 MANEJO DE SISTEMA DE ARCHIVOS (Linux Absoluto)
+// ===================================================================================================================================== //
+static int crear_directorio_grupo(const char* nombre_directorio) {
+
+    char exe_path[512];
+    char dir_storage[512];
+    char dir_grupo[1024];
+
+    ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+    if (len == -1) return 0;
+    exe_path[len] = '\0';
+
+    char *base_dir = dirname(exe_path);
+
+    snprintf(dir_storage, sizeof(dir_storage), "%s/storage", base_dir);
+    mkdir(dir_storage, 0700);
+
+    // Concatenamos la base con el nombre que vino de la DB
+    snprintf(dir_grupo, sizeof(dir_grupo), "%s/storage/%s", base_dir, nombre_directorio);
+
+    if (mkdir(dir_grupo, 0700) == 0 || errno == EEXIST) {
+        return 1;
+    }
+    return 0;
+}
+
+// ===================================================================================================================================== //
 // 🔒 STORED PROCEDURES: Prepared Statements (Grupos)
 // ===================================================================================================================================== //
-static int sp_insertar_grupo(const char* nombre, int id_creador) {
+static int sp_insertar_grupo(const char* nombre, int id_creador, char* out_directorio, size_t dir_max_len) {
+
     MYSQL_STMT *stmt;
     MYSQL_BIND bind_param[2];
-    MYSQL_BIND bind_result[1];
+    MYSQL_BIND bind_result[2]; // Ahora esperamos 2 resultados
     int nuevo_id = 0;
+    unsigned long dir_len = 0;
     const char *query = "CALL sp_insertar_grupo(?, ?)";
 
     MYSQL *conn = connect_db();
@@ -31,14 +66,13 @@ static int sp_insertar_grupo(const char* nombre, int id_creador) {
         return 0;
     }
 
+    // --- BIND DE PARÁMETROS (Entrada) ---
     memset(bind_param, 0, sizeof(bind_param));
 
-    // Parámetro 1: Nombre
     bind_param[0].buffer_type = MYSQL_TYPE_STRING;
     bind_param[0].buffer = (char *)nombre;
     bind_param[0].buffer_length = strlen(nombre);
 
-    // Parámetro 2: ID Creador
     bind_param[1].buffer_type = MYSQL_TYPE_LONG;
     bind_param[1].buffer = (void *)&id_creador;
     bind_param[1].is_unsigned = 0;
@@ -49,9 +83,18 @@ static int sp_insertar_grupo(const char* nombre, int id_creador) {
         return 0;
     }
 
+    // --- BIND DE RESULTADOS (Salida) ---
     memset(bind_result, 0, sizeof(bind_result));
+
+    // Columna 1: nuevo_id
     bind_result[0].buffer_type = MYSQL_TYPE_LONG;
     bind_result[0].buffer = &nuevo_id;
+
+    // Columna 2: nombre_directorio
+    bind_result[1].buffer_type = MYSQL_TYPE_STRING;
+    bind_result[1].buffer = out_directorio;
+    bind_result[1].buffer_length = dir_max_len;
+    bind_result[1].length = &dir_len;
 
     if (mysql_stmt_bind_result(stmt, bind_result)) {
         mysql_stmt_close(stmt);
@@ -60,6 +103,12 @@ static int sp_insertar_grupo(const char* nombre, int id_creador) {
     }
 
     mysql_stmt_fetch(stmt);
+
+    // Aseguramos que el string termine en null
+    if (dir_len < dir_max_len) {
+        out_directorio[dir_len] = '\0';
+    }
+
     mysql_stmt_free_result(stmt);
     while (!mysql_stmt_next_result(stmt)) mysql_stmt_free_result(stmt);
 
@@ -69,6 +118,7 @@ static int sp_insertar_grupo(const char* nombre, int id_creador) {
 }
 
 static int sp_editar_grupo(int id, const char* nombre) {
+
     MYSQL_STMT *stmt;
     MYSQL_BIND bind_param[2];
     const char *query = "CALL sp_editar_grupo(?, ?)";
@@ -85,12 +135,10 @@ static int sp_editar_grupo(int id, const char* nombre) {
 
     memset(bind_param, 0, sizeof(bind_param));
 
-    // Parámetro 1: ID
     bind_param[0].buffer_type = MYSQL_TYPE_LONG;
     bind_param[0].buffer = (void *)&id;
     bind_param[0].is_unsigned = 0;
 
-    // Parámetro 2: Nombre
     bind_param[1].buffer_type = MYSQL_TYPE_STRING;
     bind_param[1].buffer = (char *)nombre;
     bind_param[1].buffer_length = strlen(nombre);
@@ -108,7 +156,7 @@ static int sp_editar_grupo(int id, const char* nombre) {
 }
 
 // ===================================================================================================================================== //
-// CONSTRUCTOR
+// CONSTRUCTOR Y CACHÉ
 // ===================================================================================================================================== //
 Grupo* newGrupo() {
     Grupo* oneGrupo = (Grupo*)malloc(sizeof(Grupo));
@@ -118,9 +166,6 @@ Grupo* newGrupo() {
     return oneGrupo;
 }
 
-// ===================================================================================================================================== //
-// INICIALIZACIÓN DE CACHÉ
-// ===================================================================================================================================== //
 void grupos_init_cache(ArrayList* alistGrupos) {
     if(alistGrupos != NULL) {
         pListGruposLocal = alistGrupos;
@@ -132,13 +177,10 @@ void grupos_init_cache(ArrayList* alistGrupos) {
     }
 }
 
-// ===================================================================================================================================== //
-// CARGAR DATOS EN ARRAYLIST DESDE BD
-// ===================================================================================================================================== //
 void grupos_load_storage(ArrayList* alistGrupos) {
     if(alistGrupos == NULL) return;
 
-    DBResult *res = db_query("SELECT g.id, g.nombre, g.id_creador, g.fecha_creacion, u.nombre AS nombre_creador FROM cc_grupos g JOIN cc_usuarios u ON g.id_creador = u.id");
+    DBResult *res = db_query("SELECT g.id, g.nombre, g.nombre_directorio, g.id_creador, g.fecha_creacion, u.nombre AS nombre_creador FROM cc_grupos g JOIN cc_usuarios u ON g.id_creador = u.id");
     if (!res) return;
 
     MYSQL_ROW row;
@@ -147,9 +189,10 @@ void grupos_load_storage(ArrayList* alistGrupos) {
         if (nGrupo != NULL) {
             nGrupo->id = atoi(row[0]);
             strncpy(nGrupo->nombre, row[1] ? row[1] : "", 99);
-            nGrupo->id_creador = atoi(row[2]);
-            strncpy(nGrupo->fecha_creacion, row[3] ? row[3] : "", 19);
-            strncpy(nGrupo->nombre_creador, row[4] ? row[4] : "", 100);
+            strncpy(nGrupo->nombre_directorio, row[2] ? row[2] : "", 100);
+            nGrupo->id_creador = atoi(row[3]);
+            strncpy(nGrupo->fecha_creacion, row[4] ? row[4] : "", 19);
+            strncpy(nGrupo->nombre_creador, row[5] ? row[5] : "", 100);
 
             alistGrupos->add(alistGrupos, nGrupo);
         }
@@ -160,9 +203,6 @@ void grupos_load_storage(ArrayList* alistGrupos) {
     printf("📊 Memoria: %d GRUPOS cargados. Espacio reservado: %d slots.\n", alistGrupos->len(alistGrupos), alistGrupos->reservedSize);
 }
 
-// ===================================================================================================================================== //
-// FUNCIÓN AUXILIAR: PARSEO DEL BODY
-// ===================================================================================================================================== //
 static void get_grupo_value(const char *body, const char *key, char *out, size_t out_size) {
     char *pos = strstr(body, key);
     if (!pos) {
@@ -182,9 +222,11 @@ static void get_grupo_value(const char *body, const char *key, char *out, size_t
 // SERVICIO: REGISTRAR NUEVO GRUPO
 // ===================================================================================================================================== //
 int grupos_service_register(const char *body, char *error_msg, int error_size) {
+
     char nombre[100];
     char d_nombre[100];
     char id_creador_str[32];
+    char nombre_directorio[100] = {0}; // Buffer para el nombre generado por la DB
 
     get_grupo_value(body, "nombre", nombre, sizeof(nombre));
     url_decode(d_nombre, nombre);
@@ -208,24 +250,31 @@ int grupos_service_register(const char *body, char *error_msg, int error_size) {
         }
     }
 
-    // 2. Inserción en Base de Datos vía SP
-    int nuevo_id = sp_insertar_grupo(d_nombre, id_creador);
+    // 2. Inserción en Base de Datos vía SP (Atrapamos el ID y el Directorio)
+    int nuevo_id = sp_insertar_grupo(d_nombre, id_creador, nombre_directorio, sizeof(nombre_directorio));
 
     if (nuevo_id <= 0) {
         snprintf(error_msg, error_size, "Error interno al guardar en la base de datos.");
         return 0;
     }
 
-    // 3. Sincronización en ArrayList
+    // 3. Creación del directorio físico en el servidor usando el dato de la DB
+    if (!crear_directorio_grupo(nombre_directorio)) {
+        snprintf(error_msg, error_size, "Grupo registrado, pero falló la creación del almacenamiento en disco.");
+        return 0;
+    }
+
+    // 4. Sincronización en ArrayList
     Grupo* nuevoGrupo = newGrupo();
     if (nuevoGrupo) {
         nuevoGrupo->id = nuevo_id;
         strncpy(nuevoGrupo->nombre, d_nombre, 99);
+        strncpy(nuevoGrupo->nombre_directorio, nombre_directorio, 99);
         nuevoGrupo->id_creador = id_creador;
-        // La fecha_creacion se omitirá en RAM temporalmente hasta el reinicio
+        // La fecha_creacion se omitirá en RAM temporalmente hasta el próximo reinicio o carga
 
         pListGruposLocal->add(pListGruposLocal, nuevoGrupo);
-        printf("✅ Sincronización exitosa: Grupo '%s' (ID: %d) añadido a RAM.\n", d_nombre, nuevo_id);
+        printf("✅ Grupo '%s' (ID: %d, Dir: %s) añadido a RAM y Disco.\n", d_nombre, nuevo_id, nombre_directorio);
     }
 
     return 1;
@@ -250,24 +299,21 @@ int grupos_service_edit(const char *body, char *error_msg, int error_size) {
         return 0;
     }
 
-    // 1. Verificación en memoria
     if (pListGruposLocal != NULL) {
         for (int i = 0; i < pListGruposLocal->len(pListGruposLocal); i++) {
             Grupo* g = (Grupo*) pListGruposLocal->get(pListGruposLocal, i);
-            if (g->id != id_a_editar && strcasecmp(g->nombre, d_nombre) == 0 && g->id_creador == id_a_editar /* asume contexto de creador */) {
+            if (g->id != id_a_editar && strcasecmp(g->nombre, d_nombre) == 0 && g->id_creador == id_a_editar) {
                 snprintf(error_msg, error_size, "Error: Nombre de grupo existente.");
                 return 0;
             }
         }
     }
 
-    // 2. Actualizar en Base de Datos vía SP
     if (sp_editar_grupo(id_a_editar, d_nombre) == 0) {
         snprintf(error_msg, error_size, "Error al actualizar en la base de datos.");
         return 0;
     }
 
-    // 3. Actualizar en Memoria
     if (pListGruposLocal != NULL) {
         for (int i = 0; i < pListGruposLocal->len(pListGruposLocal); i++) {
             Grupo* g = (Grupo*) pListGruposLocal->get(pListGruposLocal, i);
@@ -364,11 +410,11 @@ static void route_get_grupos_list(int client, const char *body) {
 
     for (int i = 0; i < total_grupos; i++) {
         Grupo* oneGrupo = (Grupo*) pListGruposLocal->get(pListGruposLocal, i);
-        char item[250];
+        char item[2048];
 
         snprintf(item, sizeof(item),
-            "{\"id\": %d, \"nombre\": \"%s\" , \"id_creador\": %d , \"fecha_creacion\": \"%s\", \"nombre_creador\": \"%s\"}%s",
-            oneGrupo->id, oneGrupo->nombre, oneGrupo->id_creador, oneGrupo->fecha_creacion, oneGrupo->nombre_creador, (i < total_grupos - 1) ? "," : "");
+            "{\"id\": %d, \"nombre\": \"%s\" , \"nombre_directorio\": \"%s\", \"fecha_creacion\": \"%s\", \"nombre_creador\": \"%s\"}%s",
+            oneGrupo->id, oneGrupo->nombre, oneGrupo->nombre_directorio, oneGrupo->fecha_creacion, oneGrupo->nombre_creador, (i < total_grupos - 1) ? "," : "");
 
         strcat(json, item);
     }

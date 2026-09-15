@@ -34,16 +34,20 @@ insert into cc_roles(descripcion) VALUES("Usuario");
 CREATE TABLE IF NOT EXISTS cc_grupos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
+    nombre_directorio(100) NOT NULL,
     id_creador INT NOT NULL, -- El "Jefe" o dueño original del grupo
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_creador) REFERENCES cc_usuarios(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 show columns from cc_grupos;
+select * from cc_grupos;
+Delete from cc_grupos;
+ALTER TABLE cc_grupos ADD COLUMN nombre_directorio VARCHAR(100) NULL AFTER nombre;
 
-SELECT g.id, g.nombre, g.id_creador, g.fecha_creacion, u.nombre AS nombre_usuario
-FROM cc_grupos g
-JOIN cc_usuarios u ON g.id_creador = u.id;
+SELECT g.id, g.nombre, g.nombre_directorio, g.id_creador, g.fecha_creacion, u.nombre AS nombre_creador FROM cc_grupos g JOIN cc_usuarios u ON g.id_creador = u.id;
+
+
 
 # ======================================================== #
 # table cc_miembros_grupo (Con Historial / Soft Delete)

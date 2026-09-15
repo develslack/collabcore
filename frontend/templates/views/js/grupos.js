@@ -24,6 +24,7 @@ window.dTable = window.dTable || null;
       // 1. Iniciamos la variable con la primera parte
         let html = `
             <td class="text-center">${data.nombre}</td>
+            <td class="text-center">${data.nombre_directorio}</td>
             <td class="text-center">${data.fecha_creacion}</td>
         `;
 

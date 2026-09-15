@@ -10,6 +10,7 @@
 typedef struct {
     int id;
     char nombre[100];
+    char nombre_directorio[100];
     int id_creador;
     char fecha_creacion[20]; // Formato YYYY-MM-DD HH:MM:SS
     char nombre_creador[100];
