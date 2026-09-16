@@ -20,6 +20,7 @@ gcc -Wall -g -std=c11  -o backend/bin/collabcore \
     backend/src/hash.h backend/src/hash.c \
     backend/src/system_struct.h backend/src/system_struct.c \
     backend/src/grupos_service.h backend/src/grupos_service.c \
+    backend/src/integrantes_service.h backend/src/integrantes_service.c \
     backend/src/main.c \
     -lpthread -lmysqlclient -lssl -lcrypto 2>&1 | tee comp_err.txt
 

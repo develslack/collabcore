@@ -363,6 +363,19 @@ int get_grupos_service_id(const char *body, char *json_out, int out_size) {
     return 1;
 }
 
+
+int grupos_service_get_creador(int id_grupo) {
+    if (pListGruposLocal != NULL) {
+        for (int i = 0; i < pListGruposLocal->len(pListGruposLocal); i++) {
+            Grupo* g = (Grupo*) pListGruposLocal->get(pListGruposLocal, i);
+            if (g->id == id_grupo) {
+                return g->id_creador;
+            }
+        }
+    }
+    return 0; // Si el grupo no existe, retorna 0 (Nadie tiene permisos)
+}
+
 // ===================================================================================================================================== //
 // ROUTES HANDLERS
 // ===================================================================================================================================== //

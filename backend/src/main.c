@@ -10,6 +10,7 @@
 #include "roles_service.h"
 #include "session_manager.h"
 #include "grupos_service.h"
+#include "integrantes_service.h"
 #include "ArrayList.h"
 
 
@@ -42,6 +43,7 @@ int main() {
     // 1. SE CREA LOS ARRAYLIST
     ArrayList* alist_roles = al_newArrayList();
     ArrayList* alist_grupos = al_newArrayList();
+    ArrayList* alist_integrantes = al_newArrayList();
 
     // 2. Inicializar cache de roles (MODULAR)
     roles_init_cache(alist_roles);
@@ -50,6 +52,10 @@ int main() {
     // 3. Inicializar cache de grupos (MODULAR)
     grupos_init_cache(alist_grupos);
     grupos_load_storage(alist_grupos);
+
+    // 4. Inicializar cache de integrantes (MODULAR)
+    integrantes_init_cache(alist_integrantes);
+    integrantes_load_storage(alist_integrantes);
 
     printf("Iniciando aplicación...\n");
 

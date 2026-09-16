@@ -10,6 +10,7 @@
 #include "users_service.h"
 #include "roles_service.h"
 #include "grupos_service.h"
+#include "integrantes_service.h"
 #include "session_manager.h"
 
 
@@ -135,6 +136,7 @@ void init_routes() {
     init_roles_routes();
     // HASTA AQUI RUTAS BÁSICAS DEL SISTEMA Y SE COMIENZAN A AÑADIR LAS RUTAS DE LOGICA DE NEGOCIOS
     init_grupos_routes();
+    init_integrantes_routes();
 
 
 

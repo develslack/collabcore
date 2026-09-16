@@ -1,0 +1,33 @@
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> <strong>Integrantes</strong>
+            </div>
+        </div><hr>
+            <button type="button" class="btn btn-success btn-sm" id="add-integrante-form">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Añadir Integrante</button><hr>
+
+
+                <table class='display compact' style='width:100%' id='integrantesTable'>
+                    <thead>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Nombre Grupo</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Integrante</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Rol</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-default'>Fecha Alta</span></th>
+                        <th class='text-nowrap text-center'><span class='label label-warning'>Acciones</span></th>
+                    </thead>
+
+                        <tbody id="integrantesTableBody"></tbody>
+
+
+                    </table>
+                    <hr>
+
+                    <div id="alert-info-integrantes"></div>
+
+    </div>
+</div>
+
+<div id="contenedor-modal-maestro-integrantes"></div>

@@ -23,6 +23,7 @@ void grupos_load_storage(ArrayList* alistGrupos);
 int grupos_service_register(const char *body, char *error_msg, int error_size);
 int grupos_service_edit(const char *body, char *error_msg, int error_size);
 int get_grupos_service_id(const char *body, char *json_out, int out_size);
+int grupos_service_get_creador(int id_grupo);
 
 void init_grupos_routes();
 
